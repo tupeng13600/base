@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tp.api.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.tp.api.bean.User">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="nick" jdbcType="VARCHAR" property="nick"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="salt" jdbcType="VARCHAR" property="salt"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="level" jdbcType="TINYINT" property="level"/>
+        <result column="empirical_value" jdbcType="BIGINT" property="empiricalValue"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="deleted" jdbcType="BIT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, nick, phone, password, salt, avatar, birthday, sex, address, level, empirical_value,
+    create_time, update_time, deleted
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getByPhone" resultType="com.tp.api.bean.User">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        WHERE phone = #{phone}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insert" parameterType="com.tp.api.bean.User">
+    insert into user (id, nick, phone,
+      password, salt, avatar, 
+      birthday, sex, address, 
+      level, empirical_value, create_time, 
+      update_time, deleted)
+    values (#{id,jdbcType=VARCHAR}, #{nick,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=TIMESTAMP}, #{sex,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{level,jdbcType=TINYINT}, #{empiricalValue,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
+  </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tp.api.bean.User">
+        update user
+        <set>
+            <if test="nick != null">
+                nick = #{nick,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=TINYINT},
+            </if>
+            <if test="empiricalValue != null">
+                empirical_value = #{empiricalValue,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.tp.api.bean.User">
+    update user
+    set nick = #{nick,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=TIMESTAMP},
+      sex = #{sex,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      level = #{level,jdbcType=TINYINT},
+      empirical_value = #{empiricalValue,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      deleted = #{deleted,jdbcType=BIT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
