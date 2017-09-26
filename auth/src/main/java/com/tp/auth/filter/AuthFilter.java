@@ -5,7 +5,6 @@ import com.tp.auth.cache.AuthCache;
 import com.tp.auth.cache.TokenThreadLocal;
 import com.tp.auth.model.RespModel;
 import com.tp.auth.token.Token;
-import com.tp.auth.util.CurrentThreadLocal;
 import com.tp.auth.util.SecurityUtil;
 import org.apache.catalina.connector.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +39,6 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        CurrentThreadLocal.removeSchoolId();
         return false;
     }
 

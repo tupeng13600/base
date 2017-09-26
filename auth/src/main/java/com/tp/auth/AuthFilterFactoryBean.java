@@ -20,10 +20,9 @@ public class AuthFilterFactoryBean extends ShiroFilterFactoryBean {
     public AuthFilterFactoryBean(SecurityManager securityManager, List<String> defineFilterChain) {
         setSecurityManager(securityManager);
         Map<String, Filter> filterMap = new HashMap<>();
-        filterMap.put("upcAuth", new AuthFilter());
+        filterMap.put("restAuth", new AuthFilter());
         setFilters(filterMap);
         Map<String, String> definitionMap = new LinkedHashMap<>();
-        definitionMap.put("/auth/login", "upcAuth");
         if (CollectionUtils.isNotEmpty(defineFilterChain)) {
             defineFilterChain.stream().forEach(chain -> {
                 String[] uriList = chain.split("=");
