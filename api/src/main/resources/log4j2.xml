@@ -22,8 +22,8 @@
 
     <Loggers>
         <root level="info">
-            <!--<appender-ref ref="Console"/>-->
-            <appender-ref ref="mainLog"/>
+            <appender-ref ref="Console"/>
+            <!--<appender-ref ref="mainLog"/>-->
         </root>
     </Loggers>
 </Configuration>

@@ -2,7 +2,7 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <plugins>
-        <plugin interceptor="com.xcjy.web.common.interceptors.MybatisQueryInterceptors" />
-        <plugin interceptor="com.xcjy.web.common.interceptors.MybatisUpdateInterceptors" />
+        <plugin interceptor="com.tp.api.common.mybatis.MybatisQueryInterceptors" />
+        <plugin interceptor="com.tp.api.common.mybatis.MybatisUpdateInterceptors" />
     </plugins>
 </configuration>

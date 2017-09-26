@@ -18,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @SpringBootApplication
 @EnableScheduling
-@MapperScan("com.xcjy.web.mapper")
+@MapperScan("com.tp.api.mapper")
 @EnableSwagger2
 public class Application {
 
