@@ -10,8 +10,6 @@ import java.util.Date;
 @Data
 public class UserInfoRes {
 
-    private String id;
-
     private String nick;
 
     private String phone;
@@ -37,7 +35,6 @@ public class UserInfoRes {
         if(null == user) {
             throw new BaseException("用户信息不可为空");
         }
-        this.id = user.getId();
         this.nick = user.getNick();
         this.phone = user.getPhone();
         this.avatar = user.getAvatar();

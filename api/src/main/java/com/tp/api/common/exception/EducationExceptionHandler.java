@@ -5,6 +5,7 @@ import com.tp.api.common.utils.ReflectUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
@@ -65,6 +66,13 @@ public class EducationExceptionHandler {
     public RespModel unauthenticated(UnauthenticatedException e) {
         logger.error("Exception:", e);
         return new RespModel(false).setData("未登录");
+    }
+
+    @ExceptionHandler(UnknownAccountException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public RespModel educationException(UnknownAccountException e) {
+        return new RespModel(false).setData(e.getMessage());
     }
 
     @ExceptionHandler(BaseException.class)

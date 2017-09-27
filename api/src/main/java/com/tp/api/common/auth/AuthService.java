@@ -1,31 +1,33 @@
 package com.tp.api.common.auth;
 
-import com.tp.auth.model.LoginSuccessModel;
-import com.tp.auth.model.User;
+import com.tp.api.bean.User;
+import com.tp.api.common.exception.BaseException;
+import com.tp.api.mapper.UserMapper;
 import com.tp.auth.service.AuthMessageService;
-import com.tp.auth.util.SecurityUtil;
-import org.apache.shiro.util.SimpleByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Set;
+import java.util.Date;
 
 /**
  * Created by tupeng on 2017/7/18.
  */
 public class AuthService implements AuthMessageService {
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
-    public User getUser(String username) {
-        String password = SecurityUtil.encryptPwd("123", new SimpleByteSource("88888888"));
-        return new User("tupeng", password, "88888888");
+    public String getVerifyCode(String phone) {
+        User user = userMapper.getByPhone(phone);
+        if(null == user) {
+            throw new BaseException("该用户尚未注册");
+        }
+        return "666666";
     }
 
     @Override
-    public Set<String> getRole(String username) {
-        return null;
-    }
-
-    @Override
-    public void saveUserMessage(LoginSuccessModel model) {
+    public void saveUserMessage(String token, String imei, String phone, Date loginTime) {
 
     }
+
 }

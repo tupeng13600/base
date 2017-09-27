@@ -6,10 +6,15 @@ import com.tp.api.controller.user.req.InitReq;
 import com.tp.api.controller.user.res.UserInfoRes;
 import com.tp.api.enums.VerifyType;
 import com.tp.api.mapper.UserMapper;
-import com.tp.auth.util.UserUtil;
+import com.tp.auth.cache.TokenThreadLocal;
+import com.tp.auth.token.Token;
+import com.tp.auth.util.CurrentUser;
+import com.tp.auth.util.SecurityUtil;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -23,31 +28,26 @@ public class UserService {
         return null == userMapper.getByPhone(phone) ? false : true;
     }
 
-    public String register(String phone, String verifyCode) {
+    @Transactional
+    public String register(String phone, String verifyCode, String imei) {
         if (isUsed(phone)) {
             throw new BaseException("手机号码已经被使用");
         }
-        if (!verifyCodeIsOk(verifyCode)) {
-            throw new BaseException("手机验证码不正确");
-        }
         User user = new User(phone);
         userMapper.insert(user);
-        return user.getId();
+        SecurityUtils.getSubject().login(new Token(SecurityUtil.randomString(), imei, phone, verifyCode)); //执行登录操作并且校验验证码是否正确
+        return TokenThreadLocal.get();
     }
 
-    public Boolean verifyCodeIsOk(String verifyCode) {
-        String serverCode = "666666";
-        return serverCode.equals(verifyCode);
-    }
-
+    @Transactional
     public UserInfoRes init(InitReq req) {
-        User user = userMapper.selectByPrimaryKey(req.getId());
+        String phone = CurrentUser.phone();
+        User user = userMapper.getByPhone(phone);
         if (null == user) {
             throw new BaseException("用户信息不存在");
         }
-        String phone = UserUtil.getCurrentUserName();
-        if (!phone.equals(user.getPhone())) {
-            throw new BaseException("非法操作");
+        if(user.getInit()) {
+            throw new BaseException("用户已经进行过初始化");
         }
         BeanUtils.copyProperties(req, user);
         user.setInit(true);

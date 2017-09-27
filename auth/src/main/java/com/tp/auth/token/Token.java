@@ -7,52 +7,63 @@ import org.apache.shiro.authc.AuthenticationToken;
  */
 public class Token implements AuthenticationToken {
 
-    private String host;
+    private String token;
 
-    private String username;
+    private String imei;
 
-    private String password;
+    private String phone;
+
+    private String verifyCode;
 
     public Token() {
     }
 
-    public Token(String username, String password, String host) {
-        this.username = username;
-        this.password = password;
-        this.host = host;
+    public Token(String token, String imei, String phone, String verifyCode) {
+        this.token = token;
+        this.imei = imei;
+        this.phone = phone;
+        this.verifyCode = verifyCode;
+    }
+
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
     public Object getPrincipal() {
-        return getUsername();
+        return getPhone();
     }
 
     @Override
     public Object getCredentials() {
-        return getPassword();
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
+        return getVerifyCode();
     }
 }

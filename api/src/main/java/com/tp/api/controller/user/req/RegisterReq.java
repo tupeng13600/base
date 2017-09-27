@@ -11,6 +11,8 @@ public class RegisterReq {
     @Length(min = 11, max = 11)
     private String phone;
 
+    private String imei;
+
     @NotBlank
     @Length(min = 6, max = 6)
     private String verifyCode;

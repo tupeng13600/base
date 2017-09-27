@@ -12,6 +12,7 @@
         <result column="sex" jdbcType="VARCHAR" property="sex"/>
         <result column="address" jdbcType="VARCHAR" property="address"/>
         <result column="level" jdbcType="TINYINT" property="level"/>
+        <result column="init" jdbcType="BIT" property="init"/>
         <result column="empirical_value" jdbcType="BIGINT" property="empiricalValue"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -19,7 +20,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, nick, phone, password, salt, avatar, birthday, sex, address, level, empirical_value,
-    create_time, update_time, deleted
+    create_time, update_time, deleted, init
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -28,7 +29,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
-    <select id="getByPhone" resultType="com.tp.api.bean.User">
+    <select id="getByPhone" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from user
@@ -45,12 +46,12 @@
       password, salt, avatar, 
       birthday, sex, address, 
       level, empirical_value, create_time, 
-      update_time, deleted)
+      update_time, deleted, init)
     values (#{id,jdbcType=VARCHAR}, #{nick,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
       #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
       #{birthday,jdbcType=TIMESTAMP}, #{sex,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{level,jdbcType=TINYINT}, #{empiricalValue,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
+      #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT},  #{init,jdbcType=BIT})
   </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.tp.api.bean.User">
@@ -95,6 +96,9 @@
             <if test="deleted != null">
                 deleted = #{deleted,jdbcType=BIT},
             </if>
+            <if test="init != null">
+                init = #{init, jdbcType=BIT},
+            </if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
@@ -113,7 +117,8 @@
       empirical_value = #{empiricalValue,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      deleted = #{deleted,jdbcType=BIT}
+      deleted = #{deleted,jdbcType=BIT},
+      init = #{init,jdbcType=BIT}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

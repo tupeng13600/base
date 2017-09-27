@@ -9,6 +9,8 @@ import com.tp.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -34,8 +36,8 @@ public class UserController {
      * @return
      */
     @PostMapping("/registration")
-    public BaseResponse register(RegisterReq req) {
-        return new BaseResponse(userService.register(req.getPhone(), req.getVerifyCode()));
+    public BaseResponse register(@RequestBody @Valid RegisterReq req) {
+        return new BaseResponse(userService.register(req.getPhone(), req.getVerifyCode(), req.getImei()));
     }
 
     /**
@@ -45,7 +47,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/init")
-    public UserInfoRes init(InitReq req) {
+    public UserInfoRes init(@RequestBody @Valid InitReq req) {
         return userService.init(req);
     }
 

@@ -16,12 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by tupeng on 2017/7/16.
+ * 登录拦截器
  */
 public class AuthFilter extends BasicHttpAuthenticationFilter {
 
@@ -29,94 +27,48 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
 
     protected static String TOKEN_NAME = "Access-Token";
 
-    protected static String TOKEN_COOKIE_NAME = "JSESSIONID";
+    private static final String PHONE_IDX = "phone";
 
-    protected static final String USERNAME_IDX = "username";
+    private static final String VERIFY_CODE_IDX = "verifyCode";
 
-    protected static final String PASSWORD_IDX = "password";
-
-    private static ThreadLocal<String> filterThreadLocal = new ThreadLocal<>();
+    private static final String IMEI_IDX = "IMEI";
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         return false;
     }
 
-    /**
-     * 重写请求被拒绝时的处理方式
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        String token = getToken(WebUtils.toHttp(request));
-        return login(WebUtils.toHttp(request), token) ? true : onAccessDenied(WebUtils.toHttp(request), WebUtils.toHttp(response), filterThreadLocal.get());
-    }
-
-    private boolean login(HttpServletRequest request, String requestToken) {
-        Token token = getUpcToken(requestToken);
-        if (null == token) {
-            token = getUpcToken(request);
-        }
-        if (null == token) {
-            filterThreadLocal.set("用户token无效");
-            LOGGER.error("用户token无效，请重新登录：{}", requestToken);
-            return false;
-        }
-        try {
-            if (StringUtils.isBlank(requestToken)) {
-                requestToken = SecurityUtil.randomString();
-            }
-            TokenThreadLocal.put(requestToken);
-            SecurityUtils.getSubject().login(token);
-        } catch (Exception e) {
-            filterThreadLocal.set("用户名或密码错误");
-            LOGGER.error("登录失败，失败信息:{}", e.getMessage());
-            SecurityUtils.getSubject().logout();
-            AuthCache.remove(TokenThreadLocal.get());
-            return false;
-        }
-        return true;
-    }
-
-    private Token getUpcToken(String token) {
-        return StringUtils.isBlank(token) ? null : AuthCache.get(token);
-    }
-
-    private Token getUpcToken(HttpServletRequest request) {
-        String username = request.getParameter(USERNAME_IDX);
-        String password = request.getParameter(PASSWORD_IDX);
-        LOGGER.info("获取到的，用户名:{}，密码:{}", username, password);
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            filterThreadLocal.set("用户名或者密码不能为空");
-            return null;
-        }
-        return new Token(username, password, request.getRemoteHost());
-    }
-
-    private String getToken(HttpServletRequest request) {
-        String token = request.getHeader(TOKEN_NAME);
-        LOGGER.info("通过Header获取到token：{}", token);
-        if (StringUtils.isBlank(token)) {
-            Cookie[] cookies = request.getCookies();
-            LOGGER.info("获取到的cookie大小：{}", null == cookies ? null : cookies.length);
-            if (null != cookies) {
-                for (Cookie cookie : cookies) {
-                    if (TOKEN_COOKIE_NAME.equals(cookie.getName())) {
-                        LOGGER.info("通过cookie获取到token：{}", cookie.getValue());
-                        token = cookie.getValue();
-                        break;
-                    }
+    protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
+        Token token = getByAccessToken(WebUtils.toHttp(servletRequest).getHeader(TOKEN_NAME));
+        if(null == token) { //根据手机号码和验证码进行登录
+            String phone = WebUtils.toHttp(servletRequest).getParameter(PHONE_IDX);
+            String verifyCode = WebUtils.toHttp(servletRequest).getParameter(VERIFY_CODE_IDX);
+            String imei = WebUtils.toHttp(servletRequest).getParameter(IMEI_IDX);
+            if (StringUtils.isBlank(phone) || StringUtils.isBlank(verifyCode)) {
+                return this.onAccessDenied(WebUtils.toHttp(servletResponse), "手机号码和验证码不可为空");
+            } else {
+                String accessToken = SecurityUtil.randomString();
+                LOGGER.info("生成的token:{}", accessToken);
+                try {
+                    token = new Token(accessToken, imei, phone, verifyCode);
+                    SecurityUtils.getSubject().login(token);
+                } catch (Exception e) {
+                    return this.onAccessDenied(WebUtils.toHttp(servletResponse), "验证码不正确");
                 }
             }
         }
-        return token;
+        LOGGER.info("缓存token:{}", token.getToken());
+        TokenThreadLocal.put(token.getToken());
+        return true;
     }
 
-    private Boolean onAccessDenied(HttpServletRequest request, HttpServletResponse response, String message) throws Exception {
+    private Token getByAccessToken(String accessToken) {
+        LOGGER.info("获取到的TOKEN:{}", accessToken);
+        return AuthCache.get(accessToken);
+    }
+
+    private Boolean onAccessDenied(HttpServletResponse response, String message) throws Exception {
         RespModel respModel = new RespModel(false);
         response.setStatus(Response.SC_UNAUTHORIZED);
         respModel.setData(message);
@@ -126,5 +78,4 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
         response.getWriter().write(json);
         return false;
     }
-
 }

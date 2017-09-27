@@ -1,20 +1,15 @@
 package com.tp.auth.service;
 
 
-import com.tp.auth.model.LoginSuccessModel;
-import com.tp.auth.model.User;
-
-import java.util.Set;
+import java.util.Date;
 
 /**
  * Created by tupeng on 2017/7/17.
  */
 public interface AuthMessageService {
 
-    User getUser(String username);
+    String getVerifyCode(String phone);
 
-    Set<String> getRole(String username);
-
-    void saveUserMessage(LoginSuccessModel model);
+    void saveUserMessage(String token, String imei, String phone, Date loginTime);
 
 }

@@ -25,6 +25,9 @@ public abstract class AuthCache {
     private static final Map<String, Long> tokenTime = new ConcurrentHashMap<>();
 
     public static Token get(String token) {
+        if(StringUtils.isBlank(token)) {
+            return null;
+        }
         if (expire(token)) {
             remove(token);
             return null;

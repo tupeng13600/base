@@ -11,9 +11,6 @@ import java.util.Date;
 @Data
 public class InitReq {
 
-    @NotNull
-    private String id;
-
     @NotBlank
     @Length(max = 15)
     private String nick;

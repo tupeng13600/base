@@ -95,6 +95,9 @@ public class ShiroConfig {
         defineFilterChain.add("/v2/** = anon");
         defineFilterChain.add("/xcjy/** = anon");
         defineFilterChain.add("/assets/** = anon");
+        defineFilterChain.add("/user/phone/** = anon");
+        defineFilterChain.add("/user/registration = anon");
+        defineFilterChain.add("/user/*/*/verify = anon");
         defineFilterChain.add("/** = restAuth");
         return defineFilterChain;
     }
