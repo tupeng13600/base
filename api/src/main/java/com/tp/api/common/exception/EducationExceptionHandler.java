@@ -32,7 +32,7 @@ public class EducationExceptionHandler {
     @ResponseBody
     public RespModel all(Exception e) {
         logger.error("Exception:", e);
-        return new RespModel(false).setData("系统错误，请联系相关管理人员");
+        return new RespModel(false).setErrorMessage("系统错误，请联系相关管理人员");
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -40,7 +40,7 @@ public class EducationExceptionHandler {
     @ResponseBody
     public RespModel requestTypeError(HttpRequestMethodNotSupportedException e) {
         logger.error("Exception:", e);
-        return new RespModel(false).setData("请求方式错误");
+        return new RespModel(false).setErrorMessage("请求方式错误");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -48,7 +48,7 @@ public class EducationExceptionHandler {
     @ResponseBody
     public RespModel illegalArgument(IllegalArgumentException e) {
         logger.error("Exception:", e);
-        return new RespModel(false).setData("参数错误");
+        return new RespModel(false).setErrorMessage("参数错误");
     }
 
 
@@ -57,7 +57,7 @@ public class EducationExceptionHandler {
     @ResponseBody
     public RespModel unauthorized(UnauthorizedException e) {
         logger.error("Exception:", e);
-        return new RespModel(false).setData("无权限");
+        return new RespModel(false).setErrorMessage("无权限");
     }
 
     @ExceptionHandler(UnauthenticatedException.class)
@@ -65,21 +65,21 @@ public class EducationExceptionHandler {
     @ResponseBody
     public RespModel unauthenticated(UnauthenticatedException e) {
         logger.error("Exception:", e);
-        return new RespModel(false).setData("未登录");
+        return new RespModel(false).setErrorMessage("未登录");
     }
 
     @ExceptionHandler(UnknownAccountException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public RespModel educationException(UnknownAccountException e) {
-        return new RespModel(false).setData(e.getMessage());
+        return new RespModel(false).setErrorMessage(e.getMessage());
     }
 
     @ExceptionHandler(BaseException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public RespModel educationException(BaseException e) {
-        return new RespModel(false).setData(e.getMessage());
+        return new RespModel(false).setErrorMessage(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -95,7 +95,7 @@ public class EducationExceptionHandler {
                 messageBuilder.append(field).append(message).append("; ");
             }
         }
-        return new RespModel(false).setData(messageBuilder.toString());
+        return new RespModel(false).setErrorMessage(messageBuilder.toString());
     }
 
 

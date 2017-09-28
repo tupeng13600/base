@@ -28,6 +28,8 @@ public class UserInfoRes {
 
     private Boolean init;
 
+    private String accessToken;
+
     public UserInfoRes() {
     }
 

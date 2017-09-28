@@ -71,7 +71,7 @@ public class AuthFilter extends BasicHttpAuthenticationFilter {
     private Boolean onAccessDenied(HttpServletResponse response, String message) throws Exception {
         RespModel respModel = new RespModel(false);
         response.setStatus(Response.SC_UNAUTHORIZED);
-        respModel.setData(message);
+        respModel.setErrorMessage(message);
         String json = new Gson().toJson(respModel);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8"); //设置编码格式为UTF-8

@@ -8,8 +8,7 @@ import java.util.Date;
  */
 public interface AuthMessageService {
 
-    String getVerifyCode(String phone);
-
     void saveUserMessage(String token, String imei, String phone, Date loginTime);
 
+    Boolean verifyIsTrue(String phone, String verifyCode, String imei);
 }

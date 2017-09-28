@@ -56,11 +56,7 @@ public class Realm extends AuthorizingRealm {
         }
         Token token = (Token) authenticationToken;
         LOGGER.info("执行登录操作，用户名:{}，密码:{}", token.getPhone(), token.getVerifyCode());
-        String verifyCode = authMessageService.getVerifyCode(token.getPhone());
-        if (!token.getVerifyCode().equals(verifyCode)) {
-            LOGGER.error("登录失败，验证码不正确。手机号：{}，验证码：{} ", token.getPhone(), token.getVerifyCode());
-            throw new UnknownAccountException("验证码不正确");
-        }
+        authMessageService.verifyIsTrue(token.getPhone(), token.getVerifyCode(), token.getImei());
         AuthCache.put(token.getToken(), token);
         TokenThreadLocal.put(token.getToken());
         authMessageService.saveUserMessage(token.getToken(), token.getImei(), token.getPhone(), new Date());

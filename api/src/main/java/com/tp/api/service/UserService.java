@@ -39,6 +39,10 @@ public class UserService {
         return TokenThreadLocal.get();
     }
 
+    public User getByPhone(String phone) {
+        return userMapper.getByPhone(phone);
+    }
+
     @Transactional
     public UserInfoRes init(InitReq req) {
         String phone = CurrentUser.phone();

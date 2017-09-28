@@ -11,6 +11,8 @@ public class RespModel {
 
     private Object data;
 
+    private String errorMessage;
+
     public RespModel(Boolean status) {
         this.status = status;
         if (status) {
@@ -44,6 +46,15 @@ public class RespModel {
 
     public RespModel setData(Object data) {
         this.data = data;
+        return this;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public RespModel setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
         return this;
     }
 }
